@@ -1,6 +1,7 @@
-import React, { memo } from "react";
+import React, { memo, useState, useEffect } from "react";
 import styled from "styled-components";
 import useCanvas from "./../hooks/useCanvas";
+import { SketchPicker } from 'react-color';
 
 const CanvasEl = styled.canvas`
     bottom: 0;
@@ -10,12 +11,21 @@ const CanvasEl = styled.canvas`
     top: 0;
     z-index: 999;
 `;
-
 const CanvasComponent = memo(({canvasRef}) => <CanvasEl ref={canvasRef} />);
 
 const Canvas = () => {
-    const [canvasRef] = useCanvas();
-    return <CanvasComponent canvasRef={canvasRef} />;
+    const [color, setColor] = useState('yellow');
+    const [canvasRef, changeColor] = useCanvas();
+    useEffect(() => {
+        changeColor(color);
+    },[color, changeColor])
+    return <div>
+            <CanvasComponent canvasRef={canvasRef} />
+            <SketchPicker 
+                color={color}
+                onChangeComplete={(c)=>setColor(c.hex)}
+            />
+        </div>;
 };
 
 export default Canvas;
